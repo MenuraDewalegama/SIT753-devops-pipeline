@@ -19,5 +19,16 @@ pipeline {
                 bat "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} ."
             }
         }
+
+        stage('Test') {
+            steps {
+                dir("jukebox-backend") {
+                    bat "npm install"
+                    bat "npm start"
+                    bat "npm test"
+                }
+            }
+        }
+        
     }
 }
