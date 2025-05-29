@@ -79,11 +79,12 @@ pipeline {
                 def props = readProperties file: 'global.properties'
                 env.PROJECT_ID = props['PROJECT_ID']
                 env.REGION = props['REGION']
-
-                withCredentials([
-                    string(credentialsId: 'dockerhub', variable: 'dockerhub')
-                ]) {
-                    bat "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                script{
+                    withCredentials([
+                        string(credentialsId: 'dockerhub', variable: 'dockerhub')
+                    ]) {
+                        bat "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                    }
                 }
             }
         }
