@@ -18,9 +18,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir("${env.PROJECT_BACKEND}") {
-                    bat "copy /Y ${env.ENV_FILE_LOCTION}\\.env"
-                }
+                bat "copy /Y ${env.ENV_FILE_LOCTION}\\.env ${env.PROJECT_BACKEND}"
                 bat "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} ."
             }
         }
