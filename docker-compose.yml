@@ -1,0 +1,6 @@
+version: '3'
+services:
+  jukebox:
+    image: ${IMAGE_NAME}:${IMAGE_TAG}
+    ports:
+      - "3000:3000"

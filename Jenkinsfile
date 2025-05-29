@@ -30,7 +30,8 @@ pipeline {
                     bat "docker run -d --name ${DOCKER_CONTAINER} -p 3000:3000 ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
                     bat "npm install"
                     bat "npm test || exit /b 0"
-                    bat "docker stop ${DOCKER_CONTAINER}"
+                    bat "docker stop ${env.DOCKER_CONTAINER}"
+                    bat "docker rm ${env.DOCKER_CONTAINER}"
                 }
             }
         }
@@ -66,13 +67,19 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy') {
+            steps {
+                set IMAGE_NAME=${env.IMAGE_NAME}
+                set IMAGE_TAG=${env.IMAGE_TAG}
+                bat "docker-compose up -d --build"
+            }
+        }
         
     }
 
     post {
         always {
-            bat "docker stop ${env.DOCKER_CONTAINER}"
-            bat "docker rm ${env.DOCKER_CONTAINER}"
             bat "docker rmi ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
         }
     }
