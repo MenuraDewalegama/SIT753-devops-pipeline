@@ -77,12 +77,28 @@ pipeline {
 
         stage('Release') {
             steps {
+                // script{
+                //     withCredentials([
+                //         usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
+                //     ]) {
+                //         bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
+                //         bat "docker push %DOCKER_USER%/${IMAGE_NAME}:${IMAGE_TAG}"
+                //     }
+                // }
+
                 script{
                     withCredentials([
+                        file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS'),
                         usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
                     ]) {
-                        bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
-                        bat "docker push %DOCKER_USER%/${IMAGE_NAME}:${IMAGE_TAG}"
+                        bat """
+                            gcloud run deploy ${env.IMAGE_NAME}-service ^
+                                --image=docker.io/%DOCKER_USER%/${env.IMAGE_NAME}:${env.IMAGE_TAG} ^
+                                --platform=managed ^
+                                --region=${env.REGION} ^
+                                --allow-unauthenticated ^
+                                --quiet
+                        """
                     }
                 }
             }
