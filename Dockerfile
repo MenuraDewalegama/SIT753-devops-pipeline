@@ -5,7 +5,8 @@ WORKDIR /app
 COPY . .
 
 WORKDIR /app/jukebox-backend
-RUN npm ci
+RUN npm install
+RUN npm install --dev
 
 WORKDIR /app/jukebox-backend
 CMD ["npm", "start"]
