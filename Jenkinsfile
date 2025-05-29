@@ -39,6 +39,7 @@ pipeline {
     post {
         always {
             bat "docker rmi ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
+            bat "docker rm ${env.DOCKER_CONTAINER}"
         }
     }
 }

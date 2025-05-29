@@ -8,6 +8,6 @@ WORKDIR /app/jukebox-backend
 RUN npm install
 
 WORKDIR /app/jukebox-backend
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
 
 EXPOSE 3000
