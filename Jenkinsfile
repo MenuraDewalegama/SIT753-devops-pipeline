@@ -27,7 +27,7 @@ pipeline {
             steps {
                 dir("${env.PROJECT_BACKEND}") {
                     bat "npm install"
-                    bat "npm start"
+                    bat "npm run dev"
                     bat "npm test"
                 }
             }
@@ -37,7 +37,7 @@ pipeline {
 
     post {
         always {
-            bat "docker rmi \$(docker images | grep ${env.IMAGE_NAME}:${env.IMAGE_TAG})"
+            bat "docker rmi ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
         }
     }
 }
