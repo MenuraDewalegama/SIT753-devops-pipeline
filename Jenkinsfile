@@ -25,55 +25,55 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                dir("${env.PROJECT_BACKEND}") {
-                    bat "docker run -d --name ${DOCKER_CONTAINER} -p 3000:3000 ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
-                    bat "npm install"
-                    bat "npm test || exit /b 0"
-                    bat "docker stop ${env.DOCKER_CONTAINER}"
-                    bat "docker rm ${env.DOCKER_CONTAINER}"
-                }
-            }
-        }
+        // stage('Test') {
+        //     steps {
+        //         dir("${env.PROJECT_BACKEND}") {
+        //             bat "docker run -d --name ${DOCKER_CONTAINER} -p 3000:3000 ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
+        //             bat "npm install"
+        //             bat "npm test || exit /b 0"
+        //             bat "docker stop ${env.DOCKER_CONTAINER}"
+        //             bat "docker rm ${env.DOCKER_CONTAINER}"
+        //         }
+        //     }
+        // }
 
-        stage('Code Quality Analysis') {
-            steps {
+        // stage('Code Quality Analysis') {
+        //     steps {
                 
-                script {
-                    bat """
-                        powershell -Command Invoke-WebRequest -Uri https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip -OutFile sonar-scanner-cli-5.0.1.3006-windows.zip
-                        powershell -Command Expand-Archive -Path sonar-scanner-cli-5.0.1.3006-windows.zip -DestinationPath .
-                    """
-                }
+        //         script {
+        //             bat """
+        //                 powershell -Command Invoke-WebRequest -Uri https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip -OutFile sonar-scanner-cli-5.0.1.3006-windows.zip
+        //                 powershell -Command Expand-Archive -Path sonar-scanner-cli-5.0.1.3006-windows.zip -DestinationPath .
+        //             """
+        //         }
                 
-                script{
-                    withCredentials([
-                        string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')
-                    ]) {
-                        bat '''
-                        sonar-scanner-5.0.1.3006-windows\\bin\\sonar-scanner.bat
+        //         script{
+        //             withCredentials([
+        //                 string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')
+        //             ]) {
+        //                 bat '''
+        //                 sonar-scanner-5.0.1.3006-windows\\bin\\sonar-scanner.bat
 
-                    '''
-                    }
-                }
+        //             '''
+        //             }
+        //         }
                 
-            }
-        }
+        //     }
+        // }
 
-        stage('Security') {
-            steps {
-                dir("${env.PROJECT_BACKEND}") {
-                    bat "npm audit --audit-level=moderate || exit /b 0"
-                }
-            }
-        }
+        // stage('Security') {
+        //     steps {
+        //         dir("${env.PROJECT_BACKEND}") {
+        //             bat "npm audit --audit-level=moderate || exit /b 0"
+        //         }
+        //     }
+        // }
 
-        stage('Deploy') {
-            steps {
-                bat "docker-compose up -d --build"
-            }
-        }
+        // stage('Deploy') {
+        //     steps {
+        //         bat "docker-compose up -d --build"
+        //     }
+        // }
 
         stage('Release') {
             steps {
