@@ -95,6 +95,7 @@ pipeline {
                         bat 'gcloud auth activate-service-account --key-file="%GOOGLE_APPLICATION_CREDENTIALS%"'
                         bat 'gcloud config set project %GCP_PROJECT_ID%'
                         bat 'gcloud run deploy %IMAGE_NAME%-service --image=docker.io/%DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG% --platform=managed --region=%REGION% --allow-unauthenticated --quiet'   
+                        bat 'gcloud run services add-iam-policy-binding %IMAGE_NAME%-service --member="allUsers" --role="roles/run.invoker" --region=%REGION% --platform=managed'
                     }
                 }
             }
