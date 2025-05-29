@@ -6,6 +6,7 @@ pipeline {
         IMAGE_TAG = 'latest'
         ENV_FILE_LOCTION = 'D:\\Deakin\\T1\\SIT753-jenkins\\env'
         PROJECT_BACKEND = "jukebox-backend"
+        DOCKER_CONTAINER = "jukebox_container"
     }
 
     stages {
@@ -26,9 +27,9 @@ pipeline {
         stage('Test') {
             steps {
                 dir("${env.PROJECT_BACKEND}") {
-                    bat "npm install"
-                    bat "npm run dev"
+                    bat "docker run --name ${DOCKER_CONTAINER} -p 3000:3000 ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
                     bat "npm test"
+                    bat "docker stop ${DOCKER_CONTAINER}"
                 }
             }
         }
