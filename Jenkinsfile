@@ -18,12 +18,12 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                bat "copy /Y ${env.ENV_FILE_LOCTION}\\.env ${env.PROJECT_BACKEND}"
-                bat "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} ."
-            }
-        }
+        // stage('Build') {
+        //     steps {
+        //         bat "copy /Y ${env.ENV_FILE_LOCTION}\\.env ${env.PROJECT_BACKEND}"
+        //         bat "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} ."
+        //     }
+        // }
 
         // stage('Test') {
         //     steps {
@@ -79,7 +79,7 @@ pipeline {
             steps {
                 script{
                     withCredentials([
-                        string(credentialsId: 'dockerhub', variable: 'dockerhub')
+                        usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
                     ]) {
                         bat "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                     }
