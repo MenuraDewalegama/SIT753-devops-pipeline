@@ -73,11 +73,26 @@ pipeline {
                 bat "docker-compose up -d --build"
             }
         }
+
+        stage('Release') {
+            steps {
+                def props = readProperties file: 'global.properties'
+                env.PROJECT_ID = props['PROJECT_ID']
+                env.REGION = props['REGION']
+
+                withCredentials([
+                    string(credentialsId: 'dockerhub', variable: 'dockerhub')
+                ]) {
+                    bat "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
         
     }
 
     post {
         always {
+            bat "docker-compose down -d"
             bat "docker rmi ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
         }
     }
