@@ -89,7 +89,8 @@ pipeline {
                 script{
                     withCredentials([
                         file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS'),
-                        usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
+                        usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS'),
+                        string(credentialsId: 'gcp-project-id', variable: 'GCP_PROJECT_ID')
                     ]) {
                         bat """
                             gcloud run deploy ${env.IMAGE_NAME}-service ^
@@ -97,7 +98,9 @@ pipeline {
                                 --platform=managed ^
                                 --region=${env.REGION} ^
                                 --allow-unauthenticated ^
+                                --project=your-project-id
                                 --quiet
+
                         """
                     }
                 }
