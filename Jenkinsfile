@@ -7,6 +7,7 @@ pipeline {
         ENV_FILE_LOCTION = 'D:\\Deakin\\T1\\SIT753-jenkins\\env'
         PROJECT_BACKEND = "jukebox-backend"
         DOCKER_CONTAINER = "jukebox_devops_container"
+        REGION='us-central1'
     }
 
     stages {
@@ -76,11 +77,6 @@ pipeline {
 
         stage('Release') {
             steps {
-                script{
-                    def props = readProperties file: 'global.properties'
-                    env.PROJECT_ID = props['PROJECT_ID']
-                    env.REGION = props['REGION']
-                }
                 script{
                     withCredentials([
                         string(credentialsId: 'dockerhub', variable: 'dockerhub')
