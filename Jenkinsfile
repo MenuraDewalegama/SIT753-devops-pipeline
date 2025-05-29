@@ -12,11 +12,11 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                git branch: 'master', url: 'https://github.com/MenuraDewalegama/SIT753-devops-pipeline.git'
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         git branch: 'master', url: 'https://github.com/MenuraDewalegama/SIT753-devops-pipeline.git'
+        //     }
+        // }
 
         // stage('Build') {
         //     steps {
@@ -75,27 +75,40 @@ pipeline {
         //     }
         // }
 
-        stage('Release') {
-            steps {
-                // script{
-                //     withCredentials([
-                //         usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
-                //     ]) {
-                //         bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
-                //         bat "docker push %DOCKER_USER%/${IMAGE_NAME}:${IMAGE_TAG}"
-                //     }
-                // }
+        // stage('Release') {
+        //     steps {
+        //         script{
+        //             withCredentials([
+        //                 usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
+        //             ]) {
+        //                 bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
+        //                 bat "docker push %DOCKER_USER%/${IMAGE_NAME}:${IMAGE_TAG}"
+        //             }
+        //         }
 
-                script{
+        //         script{
+        //             withCredentials([
+        //                 file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS'),
+        //                 usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS'),
+        //                 string(credentialsId: 'gcp-project-id', variable: 'GCP_PROJECT_ID')
+        //             ]) {
+        //                 bat 'gcloud auth activate-service-account --key-file="%GOOGLE_APPLICATION_CREDENTIALS%"'
+        //                 bat 'gcloud config set project %GCP_PROJECT_ID%'
+        //                 bat 'gcloud run deploy %IMAGE_NAME%-service --image=docker.io/%DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG% --platform=managed --region=%REGION% --allow-unauthenticated --quiet'   
+        //                 bat 'gcloud run services add-iam-policy-binding %IMAGE_NAME%-service --member="allUsers" --role="roles/run.invoker" --region=%REGION% --platform=managed'
+        //             }
+        //         }
+        //     }
+        // }
+
+        stage('Monitoring') {
+            steps {
+                script {
                     withCredentials([
-                        file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS'),
-                        usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS'),
-                        string(credentialsId: 'gcp-project-id', variable: 'GCP_PROJECT_ID')
+                        string(credentialsId: 'DATADOG_API_KEY', variable: 'DD_API_KEY'),
+                        string(credentialsId: 'DATADOG_APP_KEY', variable: 'DD_KEY_ID')
                     ]) {
-                        bat 'gcloud auth activate-service-account --key-file="%GOOGLE_APPLICATION_CREDENTIALS%"'
-                        bat 'gcloud config set project %GCP_PROJECT_ID%'
-                        bat 'gcloud run deploy %IMAGE_NAME%-service --image=docker.io/%DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG% --platform=managed --region=%REGION% --allow-unauthenticated --quiet'   
-                        bat 'gcloud run services add-iam-policy-binding %IMAGE_NAME%-service --member="allUsers" --role="roles/run.invoker" --region=%REGION% --platform=managed'
+                        bat 'curl -s -H "DD-API-KEY: %DD_API_KEY%" -H "DD-APPLICATION-KEY: %DD_KEY_ID%" https://api.datadoghq.com/api/v1/monitor'
                     }
                 }
             }
