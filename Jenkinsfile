@@ -106,9 +106,9 @@ pipeline {
                 script {
                     withCredentials([
                         string(credentialsId: 'DATADOG_API_KEY', variable: 'DD_API_KEY'),
-                        string(credentialsId: 'DATADOG_APP_KEY', variable: 'DD_KEY_ID')
+                        string(credentialsId: 'DATADOG_KEY_ID', variable: 'DD_APP_KEY')
                     ]) {
-                        bat 'curl -s -H "DD-API-KEY: %DD_API_KEY%" -H "DD-APPLICATION-KEY: %DD_KEY_ID%" https://api.datadoghq.com/api/v1/monitor'
+                        bat 'curl -s -H "DD-API-KEY: %DD_API_KEY%" -H "DD-APPLICATION-KEY: %DD_APP_KEY%" https://api.datadoghq.com/api/v1/monitor'
                     }
                 }
             }
