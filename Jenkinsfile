@@ -81,6 +81,7 @@ pipeline {
                     withCredentials([
                         usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
                     ]) {
+                        bat "docker login"
                         bat "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                     }
                 }
