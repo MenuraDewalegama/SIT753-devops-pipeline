@@ -58,6 +58,14 @@ pipeline {
                 
             }
         }
+
+        stage('Security') {
+            steps {
+                dir("${env.PROJECT_BACKEND}") {
+                    bat "npm audit --audit-level=moderate || exit /b 0"
+                }
+            }
+        }
         
     }
 
