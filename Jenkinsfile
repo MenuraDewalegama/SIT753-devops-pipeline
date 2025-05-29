@@ -27,7 +27,7 @@ pipeline {
         stage('Test') {
             steps {
                 dir("${env.PROJECT_BACKEND}") {
-                    bat "docker run --name ${DOCKER_CONTAINER} -p 3000:3000 ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
+                    bat "docker run -d --name ${DOCKER_CONTAINER} -p 3000:3000 ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
                     bat "npm test"
                     bat "docker stop ${DOCKER_CONTAINER}"
                 }
