@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = 'jukebox'
         IMAGE_TAG = 'latest'
-        ENV_FILE_LOCTION = 'D:\\Deakin\\T1\\SIT753 - Professional Practice in Information Technology\\jenkins-app\\env'
+        ENV_FILE_LOCTION = 'D:\\Deakin\\T1\\SIT753-jenkins\\env'
         PROJECT_BACKEND = "jukebox-backend"
     }
 
