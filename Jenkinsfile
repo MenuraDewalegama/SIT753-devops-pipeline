@@ -6,7 +6,7 @@ pipeline {
         IMAGE_TAG = 'latest'
         ENV_FILE_LOCTION = 'D:\\Deakin\\T1\\SIT753-jenkins\\env'
         PROJECT_BACKEND = "jukebox-backend"
-        DOCKER_CONTAINER = "jukebox_container"
+        DOCKER_CONTAINER = "jukebox_devops_container"
     }
 
     stages {
