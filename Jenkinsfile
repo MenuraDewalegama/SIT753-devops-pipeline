@@ -39,7 +39,7 @@ pipeline {
 
     post {
         always {
-            bat "docker rmi $(docker images | grep ${env.IMAGE_NAME}:${env.IMAGE_TAG})"
+            bat "docker rmi \$(docker images | grep ${env.IMAGE_NAME}:${env.IMAGE_TAG})"
         }
     }
 }
