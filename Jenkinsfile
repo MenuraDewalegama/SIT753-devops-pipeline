@@ -70,8 +70,6 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                set IMAGE_NAME=${env.IMAGE_NAME}
-                set IMAGE_TAG=${env.IMAGE_TAG}
                 bat "docker-compose up -d --build"
             }
         }
