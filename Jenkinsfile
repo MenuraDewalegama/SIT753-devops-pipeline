@@ -89,9 +89,9 @@ pipeline {
         
     }
 
-    post {
-        always {
-            bat "docker rmi ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
-        }
-    }
+    // post {
+    //     always {
+    //         bat "docker rmi ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
+    //     }
+    // }
 }
