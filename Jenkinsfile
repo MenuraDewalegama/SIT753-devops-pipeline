@@ -4,6 +4,8 @@ pipeline {
     environment {
         IMAGE_NAME = 'jukebox'
         IMAGE_TAG = 'latest'
+        ENV_FILE_LOCTION = 'D:\\Deakin\\T1\\SIT753 - Professional Practice in Information Technology\\jenkins-app\\env'
+        PROJECT_BACKEND = "jukebox-backend"
     }
 
     stages {
@@ -16,13 +18,16 @@ pipeline {
 
         stage('Build') {
             steps {
+                dir("${env.PROJECT_BACKEND}") {
+                    bat "copy /Y ${env.ENV_FILE}\\.env ."
+                }
                 bat "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} ."
             }
         }
 
         stage('Test') {
             steps {
-                dir("jukebox-backend") {
+                dir("${env.PROJECT_BACKEND}") {
                     bat "npm install"
                     bat "npm start"
                     bat "npm test"
@@ -30,5 +35,11 @@ pipeline {
             }
         }
         
+    }
+
+    post {
+        always {
+            bat "docker rmi $(docker images | grep ${env.IMAGE_NAME}:${env.IMAGE_TAG})"
+        }
     }
 }
