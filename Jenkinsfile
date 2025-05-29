@@ -91,7 +91,6 @@ pipeline {
 
     post {
         always {
-            bat "docker-compose down -d"
             bat "docker rmi ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
         }
     }
