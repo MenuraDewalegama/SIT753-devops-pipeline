@@ -76,9 +76,11 @@ pipeline {
 
         stage('Release') {
             steps {
-                def props = readProperties file: 'global.properties'
-                env.PROJECT_ID = props['PROJECT_ID']
-                env.REGION = props['REGION']
+                script{
+                    def props = readProperties file: 'global.properties'
+                    env.PROJECT_ID = props['PROJECT_ID']
+                    env.REGION = props['REGION']
+                }
                 script{
                     withCredentials([
                         string(credentialsId: 'dockerhub', variable: 'dockerhub')
