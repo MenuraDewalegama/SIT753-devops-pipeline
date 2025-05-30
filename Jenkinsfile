@@ -31,6 +31,7 @@ pipeline {
                     bat "docker run -d --name ${DOCKER_CONTAINER} -p 3000:3000 ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
                     bat "npm install"
                     bat "npm test || exit /b 0"
+                    bat "type TestResult.txt"
                     bat "docker stop ${env.DOCKER_CONTAINER}"
                     bat "docker rm ${env.DOCKER_CONTAINER}"
                 }
