@@ -14,7 +14,7 @@
       }
     ]
   },
-  "locations": ["gcp:us-central1"],
+  "locations": ["aws:us-east-2"],
   "options": {
     "tick_every": 300
   },
