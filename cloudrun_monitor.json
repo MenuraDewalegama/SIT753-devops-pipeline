@@ -3,11 +3,7 @@
   "type": "metric alert",
   "query": "avg(last_5m):avg:cloud.run.error_count{service:jukebox-service,region:us-central1} > 0",
   "message": "Errors detected on jukebox-service in GCP. Immediate attention required.",
-  "tags": [
-    "env:prod",
-    "service:jukebox",
-    "source:jenkins"
-  ],
+  "tags": ["env:prod", "service:jukebox", "source:jenkins"],
   "options": {
     "thresholds": {
       "critical": 0
