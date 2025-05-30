@@ -102,37 +102,12 @@ pipeline {
         // }
 
         stage('Monitoring') {
-            steps {
-                def monitorJson = """
-                        {
-                            "name": "Cloud Run Error Monitor",
-                            "type": "metric alert",
-                            "query": "avg(last_5m):avg:cloud.run.error_count{service:${IMAGE_NAME}-service,region:${REGION}} > 0",
-                            "message": "Errors detected on ${IMAGE_NAME}-service in GCP. Immediate attention required.",
-                            "tags": ["env:prod", "service:${IMAGE_NAME}", "source:jenkins"],
-                            "options": {
-                                "thresholds": {
-                                "critical": 0
-                                },
-                                "notify_audit": false,
-                                "locked": false,
-                                "timeout_h": 0,
-                                "include_tags": true,
-                                "require_full_window": true,
-                                "new_host_delay": 300,
-                                "notify_no_data": false
-                            }
-                        }
-                """
+            steps { 
                 script {
                     withCredentials([
                         string(credentialsId: 'DATADOG_API_KEY', variable: 'DD_API_KEY'),
                         string(credentialsId: 'DATADOG_APP_KEY', variable: 'DD_APP_KEY')
                     ]) {
-
-                        
-                        writeFile file: 'cloudrun_monitor.json', text: monitorJson
-
                         bat 'curl -s -H "DD-API-KEY: %DD_API_KEY%" -H "DD-APPLICATION-KEY: %DD_APP_KEY%" https://api.datadoghq.com/api/v1/monitor -d @cloudrun_monitor.json'
                     }
                 }
