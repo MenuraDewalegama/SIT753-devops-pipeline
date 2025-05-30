@@ -1,19 +1,22 @@
 {
-  "name": "Cloud Run Error Monitor",
-  "type": "metric alert",
-  "query": "avg(last_5m):avg:cloud.run.error_count{service:jukebox-service,region:us-central1} > 0",
-  "message": "Errors detected on jukebox-service in GCP. Immediate attention required.",
-  "tags": ["env:prod", "service:jukebox", "source:jenkins"],
-  "options": {
-    "thresholds": {
-      "critical": 0
+  "name": "Jukebox Check",
+  "type": "api",
+  "config": {
+    "request": {
+      "method": "GET",
+      "url": "https://jukebox-service-544222117758.us-central1.run.app"
     },
-    "notify_audit": false,
-    "locked": false,
-    "timeout_h": 0,
-    "include_tags": true,
-    "require_full_window": true,
-    "new_host_delay": 300,
-    "notify_no_data": false
-  }
+    "assertions": [
+      {
+        "type": "statusCode",
+        "operator": "is",
+        "target": 200
+      }
+    ]
+  },
+  "locations": ["gcp:us-central1"],
+  "options": {
+    "tick_every": 300
+  },
+  "message": "App URL check failed. Please investigate immediately."
 }
