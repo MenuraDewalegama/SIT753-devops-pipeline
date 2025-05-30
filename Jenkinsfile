@@ -82,6 +82,7 @@ pipeline {
                         usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
                     ]) {
                         bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
+                        bat "docker tag jukebox:latest %DOCKER_USER%/${IMAGE_NAME}:${IMAGE_TAG}"
                         bat "docker push %DOCKER_USER%/${IMAGE_NAME}:${IMAGE_TAG}"
                     }
                 }
@@ -118,8 +119,8 @@ pipeline {
 
     post {
         always {
-            bat "docker stop ${env.DOCKER_CONTAINER}"
-            bat "docker rm ${env.DOCKER_CONTAINER}"
+            bat "docker ps -aq | xargs docker stop"
+            bat "docker container prune -f"
             bat "docker rmi ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
         }
     }
