@@ -103,14 +103,8 @@ pipeline {
 
         stage('Monitoring') {
             steps {
-                script {
-                    withCredentials([
-                        string(credentialsId: 'DATADOG_API_KEY', variable: 'DD_API_KEY'),
-                        string(credentialsId: 'DATADOG_APP_KEY', variable: 'DD_APP_KEY')
-                    ]) {
-
-                        def monitorJson = """
-                            {
+                def monitorJson = """
+                        {
                             "name": "Cloud Run Error Monitor",
                             "type": "metric alert",
                             "query": "avg(last_5m):avg:cloud.run.error_count{service:${IMAGE_NAME}-service,region:${REGION}} > 0",
@@ -128,8 +122,15 @@ pipeline {
                                 "new_host_delay": 300,
                                 "notify_no_data": false
                             }
-                            }
-                        """
+                        }
+                """
+                script {
+                    withCredentials([
+                        string(credentialsId: 'DATADOG_API_KEY', variable: 'DD_API_KEY'),
+                        string(credentialsId: 'DATADOG_APP_KEY', variable: 'DD_APP_KEY')
+                    ]) {
+
+                        
                         writeFile file: 'cloudrun_monitor.json', text: monitorJson
 
                         bat 'curl -s -H "DD-API-KEY: %DD_API_KEY%" -H "DD-APPLICATION-KEY: %DD_APP_KEY%" https://api.datadoghq.com/api/v1/monitor -d @cloudrun_monitor.json'
