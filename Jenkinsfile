@@ -7,7 +7,8 @@ pipeline {
         ENV_FILE_LOCTION = 'D:\\Deakin\\T1\\SIT753-jenkins\\env'
         PROJECT_BACKEND = "jukebox-backend"
         DOCKER_CONTAINER = "jukebox_devops_container"
-        REGION='us-central1'
+        REGION = 'us-central1'
+        SONAR_SCAN_LOCATION = "D:\\Deakin\\T1\\SIT753-jenkins"
     }
 
     stages {
@@ -40,25 +41,17 @@ pipeline {
 
         stage('Code Quality Analysis') {
             steps {
-                
-                script {
-                    bat """
-                        powershell -Command Invoke-WebRequest -Uri https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip -OutFile sonar-scanner-cli-5.0.1.3006-windows.zip
-                        powershell -Command Expand-Archive -Path sonar-scanner-cli-5.0.1.3006-windows.zip -DestinationPath .
-                    """
-                }
-                
-                script{
-                    withCredentials([
-                        string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')
-                    ]) {
-                        bat '''
-                        sonar-scanner-5.0.1.3006-windows\\bin\\sonar-scanner.bat
-
-                    '''
+                dir("${env.SONAR_SCAN_LOCATION}") {
+                    script{
+                        withCredentials([
+                            string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')
+                        ]) {
+                            bat '''
+                                sonar-scanner-5.0.1.3006-windows\\bin\\sonar-scanner.bat
+                            '''
+                        }
                     }
                 }
-                
             }
         }
 
