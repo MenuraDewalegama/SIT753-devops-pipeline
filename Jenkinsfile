@@ -109,7 +109,7 @@ pipeline {
                         string(credentialsId: 'DATADOG_APP_KEY', variable: 'DD_APP_KEY')
                     ]) {
                         // bat 'curl -s -H "Content-Type: application/json" -H "DD-API-KEY: %DD_API_KEY%" -H "DD-APPLICATION-KEY: %DD_APP_KEY%" https://api.us5.datadoghq.com/api/v1/monitor -d @cloudrun_monitor.json'
-                        bat 'curl -s -H "Content-Type: application/json" -H "DD-API-KEY: %DD_API_KEY%" -H "DD-APPLICATION-KEY: %DD_APP_KEY%" https://api.us5.datadoghq.com/api/v1/synthetics/tests/api -d @cloudrun_monitor.json'
+                        bat 'curl -s -H "Content-Type: application/json" -H "DD-API-KEY: %DD_API_KEY%" -H "DD-APPLICATION-KEY: %DD_APP_KEY%" https://api.us5.datadoghq.com/api/v1/synthetics/tests/api/6255805 -d @cloudrun_monitor.json'
 
                     }
                 }
